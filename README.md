@@ -25,8 +25,7 @@ Setup and Installation
 
 Clone the repository:
 bash
-git clone https://github.com/yourusername/animal-info-api.git
-cd animal-info-api
+git clone https://github.com/anageguchadze/zooAPI
 Create a virtual environment (recommended):
 
 bash
