@@ -7,4 +7,5 @@ urlpatterns = [
     path('categories/<int:pk>/', CategotyDetail.as_view()),
     path('animals/', AnimalList.as_view()),
     path('animals/<int:pk>/', AnimalDetail.as_view()),
+    path('animals/batch-delete/', AnimalBatchDeleteView.as_view()),
 ]
