@@ -1,6 +1,10 @@
 from django.core.cache import cache
 from rest_framework.response import Response
 from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework import viewsets
+from rest_framework.decorators import action
 from .models import *
 from .serializers import *
 
@@ -32,3 +36,29 @@ class AnimalList(generics.ListCreateAPIView):
 class AnimalDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Animal.objects.all()
     serializer_class = AnimalSerializer
+
+
+class AnimalBatchDeleteView(APIView):
+
+    def delete(self, request, *args, **kwargs): 
+        ids = request.data.get('ids', [])
+
+        if not ids:
+            return Response({'error': 'No IDs Provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        Animal.objects.filter(id__in=ids).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+class AnimalViewSet(viewsets.ModelViewSet):
+    queryset = Animal.objects.all()
+    serializer_class = AnimalSerializer
+
+    @action(detail=False, methods=['post'])
+    def mark_not_danger(self, request):
+        ids = request.data.get('ids', [])
+        animals = Animal.objects.filter(id__in=ids)
+
+        animals.update(status='Not In Danger')
+
+        return Response({'status':'marked as not danger'}, status=status.HTTP_200_OK)
